@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center max-w-md mt-10">
+  <div class="justify-center mt-10">
     <h1 class="font-extrabold tracking-tigh text-3xl leading-10">
       Ready for the challenge?
     </h1>

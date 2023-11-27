@@ -23,7 +23,11 @@
       </div>
     </div>
   </nav>
+  <notifications-list />
   <main class="flex justify-center">
     <router-view />
   </main>
 </template>
+<script setup lang="ts">
+import NotificationsList from '../NotificationsList.vue'
+</script>
