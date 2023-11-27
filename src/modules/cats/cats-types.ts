@@ -43,10 +43,12 @@ export declare interface ApiBreed {
 
 type BreedReview = Pick<
   ApiBreed,
-  'health_issues | social_needs | stranger_friendly'
+  'health_issues' | 'social_needs' | 'stranger_friendly'
 >
 
-export type Breed = Pick<ApiBreed, 'id | name | description'> & BreedReview
+export type Breed = Pick<ApiBreed, 'id' | 'name' | 'description'> & {
+  review: BreedReview
+}
 
 export declare interface CatImage {
   height: number

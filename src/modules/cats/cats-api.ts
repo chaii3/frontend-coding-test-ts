@@ -11,7 +11,6 @@ export default class CatsApi {
       id: breed.id,
       name: breed.name,
       description: breed.description,
-      intelligence: breed.intelligence,
       review: {
         health_issues: breed.health_issues,
         social_needs: breed.social_needs,
