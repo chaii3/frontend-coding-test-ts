@@ -8,6 +8,7 @@
 
     <div v-if="breeds.size">
       <select
+        v-model="selectValue"
         name="cats_breed_select"
         v-bind:class="[
           'bg-gray-50',
@@ -66,11 +67,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, watch } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useCats from '../compositions/use-cats'
 import { Breed } from '../cats-types'
-import { notificationSuccess } from '../../../services/notifications/notification'
 
 const route = useRoute()
 const router = useRouter()
@@ -80,20 +80,22 @@ const { breeds, imagesByBreed, ...action } = useCats()
 const targetBreed = computed<Breed | undefined>(() => {
   const { query } = route
 
-  return breeds.value.get(query.breed)
+  return breeds.value.get(String(query.breed))
 })
 
 const images = computed(() => {
   const { query } = route
 
-  return imagesByBreed.value.get(query.breed) || []
+  return imagesByBreed.value.get(String(query.breed)) || []
 })
 
-function onSelect(event: Event) {
+const selectValue = ref(String(route.query.breed))
+
+function onSelect() {
   router.push({
     ...router.currentRoute,
     query: {
-      breed: event.target.value,
+      breed: selectValue.value,
     },
   })
 }
@@ -105,13 +107,21 @@ function modifyGradeTitle(gradeTitle: string) {
 onBeforeMount(async () => {
   await action.loadBreeds()
 
-  if (route.query.breed) {
-    await action.loadCatsByBreed(route.query.breed)
+  const queryBreed = route.query.breed || ''
+
+  if (queryBreed && !Array.isArray(queryBreed)) {
+    await action.loadCatsByBreed(queryBreed)
   }
 })
 
 watch(
   () => route.query.breed,
-  () => action.loadCatsByBreed(route.query.breed),
+  async () => {
+    const queryBreed = route.query.breed || ''
+
+    if (queryBreed && !Array.isArray(queryBreed)) {
+      await action.loadCatsByBreed(queryBreed)
+    }
+  },
 )
 </script>
